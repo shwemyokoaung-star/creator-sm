@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creator SM</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #09090b;
+      color: #f4f4f5;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      padding-bottom: 5rem;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background-color: rgba(24, 24, 27, 0.95);
+      border-bottom: 1px solid #27272a;
+      padding: 1rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .brand-title {
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      color: #ef4444;
+      cursor: pointer;
+    }
+    .header-nav { display: flex; align-items: center; gap: 1rem; }
+    .nav-tabs {
+      display: flex;
+      background-color: #27272a;
+      padding: 4px;
+      border-radius: 8px;
+      border: 1px solid #3f3f46;
+      gap: 4px;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      color: #a1a1aa;
+      padding: 6px 16px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .tab-btn:hover { color: #ffffff; }
+    .tab-btn.active-anim { background-color: #dc2626; color: #ffffff; }
+    .tab-btn.active-manga { background-color: #4f46e5; color: #ffffff; }
+    .tab-btn.active-novel { background-color: #d97706; color: #ffffff; }
+
+    .mode-btn {
+      background-color: #27272a;
+      border: 1px solid #3f3f46;
+      color: #e4e4e7;
+      padding: 8px 16px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .mode-btn:hover { background-color: #3f3f46; }
+
+    main { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
+    .hidden { display: none !important; }
+
+    .card-box {
+      background-color: #18181b;
+      border: 1px solid #27272a;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      max-width: 650px;
+      margin: 0 auto;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+    .form-group { margin-bottom: 1.25rem; }
+    label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #a1a1aa;
+      margin-bottom: 0.5rem;
+    }
+    input[type="text"], input[type="number"], select, textarea {
+      width: 100%;
+      background-color: #09090b;
+      border: 1px solid #27272a;
+      border-radius: 8px;
+      padding: 0.65rem 0.85rem;
+      color: #ffffff;
+      font-size: 0.875rem;
+    }
+    input:focus, select:focus, textarea:focus { outline: 1px solid #ef4444; }
+    input[type="file"] { font-size: 0.8rem; color: #a1a1aa; }
+
+    .submit-btn {
+      width: 100%;
+      padding: 0.85rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.875rem;
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    .grid { display: grid; gap: 1.5rem; }
+    .grid-anim { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+    .grid-cover { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+
+    .media-card {
+      background-color: #18181b;
+      border: 1px solid #27272a;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .media-card:hover { border-color: #3f3f46; transform: translateY(-2px); }
+    .aspect-video { aspect-ratio: 16 / 9; width: 100%; object-fit: cover; background: #000; }
+    .aspect-cover { aspect-ratio: 3 / 4; width: 100%; object-fit: cover; background: #000; }
+    .card-meta { padding: 1rem; }
+    .card-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .card-desc { font-size: 0.75rem; color: #71717a; }
+
+    .btn-back {
+      background-color: #18181b;
+      border: 1px solid #27272a;
+      color: #a1a1aa;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
+    .btn-back:hover { color: #ffffff; }
+
+    /* Chapter List Style */
+    .chapter-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #18181b;
+      border: 1px solid #27272a;
+      padding: 1rem 1.25rem;
+      border-radius: 0.5rem;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      transition: background-color 0.15s;
+    }
+    .chapter-item:hover { background-color: #27272a; }
+
+    .strip-wrapper {
+      max-width: 650px;
+      margin: 0 auto;
+      background: #000;
+      border: 1px solid #27272a;
+    }
+    .strip-wrapper img { width: 100%; display: block; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand-title" id="brand-logo">CREATOR SM</div>
+    <div class="header-nav">
+      <div class="nav-tabs">
+        <button id="btn-tab-anim" class="tab-btn active-anim">Animations</button>
+        <button id="btn-tab-manga" class="tab-btn">Manga</button>
+        <button id="btn-tab-novel" class="tab-btn">Light Novels</button>
+      </div>
+      <button id="btn-mode-toggle" class="mode-btn">Switch to Creator Studio</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- WATCHER VIEW -->
+    <div id="view-watcher">
+      
+      <!-- Viewer Section -->
+      <div id="detail-section" class="hidden">
+        <button id="btn-close-detail" class="btn-back">← Back</button>
+        <div id="detail-display"></div>
+      </div>
+
+      <!-- Grid Section -->
+      <div id="grid-section">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.25rem;">
+          <h2 id="section-title" style="font-size: 1.25rem; font-weight: 700;">Animations Library</h2>
+          <span id="section-count" style="font-size: 0.75rem; color: #71717a;">0 series</span>
+        </div>
+        <div id="media-grid" class="grid grid-anim"></div>
+      </div>
+    </div>
+
+    <!-- CREATOR STUDIO VIEW -->
+    <div id="view-creator" class="hidden">
+      <div class="card-box">
+        <h2 id="studio-heading" style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">Upload Animation</h2>
+        <p style="font-size: 0.75rem; color: #71717a; margin-bottom: 1.5rem;">Create new titles or add numbered chapters to an existing Manga title.</p>
+
+        <form id="upload-form">
+          
+          <!-- Manga Specific: Choose existing or new series -->
+          <div id="manga-series-selector" class="form-group hidden">
+            <label>Select Manga Action</label>
+            <select id="manga-action-choice" onchange="toggleMangaMode()">
+              <option value="new">Create New Manga Series</option>
+              <option value="existing">Add Chapter to Existing Series</option>
+            </select>
+          </div>
+
+          <div id="existing-series-dropdown-group" class="form-group hidden">
+            <label>Choose Existing Manga</label>
+            <select id="select-existing-manga"></select>
+          </div>
+
+          <div class="form-group" id="group-title">
+            <label id="label-title">Title / Series Name</label>
+            <input type="text" id="input-title" placeholder="e.g. The Path of Chaos" />
+          </div>
+
+          <div class="form-group" id="group-chapter-num" class="hidden">
+            <label>Chapter Number (အပိုင်းစဉ်)</label>
+            <input type="number" id="input-chapter-num" value="1" min="1" />
+          </div>
+
+          <div class="form-group" id="group-desc">
+            <label>Synopsis / Description</label>
+            <textarea id="input-desc" rows="2" placeholder="Brief summary..."></textarea>
+          </div>
+
+          <div class="form-group" id="group-cover">
+            <label>Cover Thumbnail Image</label>
+            <input type="file" id="input-cover" accept="image/*" />
+          </div>
+
+          <!-- Video Fields -->
+          <div class="form-group" id="group-video">
+            <label>Video File (MP4, WebM)</label>
+            <input type="file" id="input-video" accept="video/*" />
+          </div>
+
+          <!-- Manga Strip Pages -->
+          <div class="form-group hidden" id="group-manga">
+            <label>Chapter Images (Ctrl or Shift နှိပ်ပြီး အစဉ်လိုက် ရွေးပါ)</label>
+            <input type="file" id="input-manga" accept="image/*" multiple />
+          </div>
+
+          <!-- Novel Fields -->
+          <div class="form-group hidden" id="group-novel">
+            <label>Chapter Story Content</label>
+            <textarea id="input-story" rows="8" placeholder="Paste story here..."></textarea>
+          </div>
+
+          <button type="submit" id="btn-submit" class="submit-btn" style="background-color: #dc2626;">Publish</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let activeCategory = 'animations';
+    let isCreatorMode = false;
+    let selectedMangaForView = null; // currently opened series
+
+    const storage = {
+      animations: [],
+      manga: [], // { id, title, desc, cover, chapters: [ { chapterNum, pages: [] } ] }
+      novels: []
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('btn-tab-anim').addEventListener('click', () => setCategory('animations'));
+      document.getElementById('btn-tab-manga').addEventListener('click', () => setCategory('manga'));
+      document.getElementById('btn-tab-novel').addEventListener('click', () => setCategory('novels'));
+      document.getElementById('brand-logo').addEventListener('click', () => setCategory('animations'));
+
+      document.getElementById('btn-mode-toggle').addEventListener('click', toggleMode);
+      document.getElementById('btn-close-detail').addEventListener('click', closeViewer);
+      document.getElementById('upload-form').addEventListener('submit', handleUpload);
+
+      render();
+    });
+
+    function setCategory(cat) {
+      activeCategory = cat;
+      selectedMangaForView = null;
+      closeViewer();
+
+      document.getElementById('btn-tab-anim').className = 'tab-btn' + (cat === 'animations' ? ' active-anim' : '');
+      document.getElementById('btn-tab-manga').className = 'tab-btn' + (cat === 'manga' ? ' active-manga' : '');
+      document.getElementById('btn-tab-novel').className = 'tab-btn' + (cat === 'novels' ? ' active-novel' : '');
+
+      document.getElementById('group-video').classList.toggle('hidden', cat !== 'animations');
+      document.getElementById('group-manga').classList.toggle('hidden', cat !== 'manga');
+      document.getElementById('group-novel').classList.toggle('hidden', cat !== 'novels');
+      document.getElementById('manga-series-selector').classList.toggle('hidden', cat !== 'manga');
+      document.getElementById('group-chapter-num').classList.toggle('hidden', cat !== 'manga');
+
+      const submitBtn = document.getElementById('btn-submit');
+      const studioHeading = document.getElementById('studio-heading');
+
+      if (cat === 'animations') {
+        submitBtn.style.backgroundColor = '#dc2626';
+        studioHeading.innerText = 'Upload Animation';
+      } else if (cat === 'manga') {
+        submitBtn.style.backgroundColor = '#4f46e5';
+        studioHeading.innerText = 'Upload Manga & Chapters';
+        updateMangaDropdown();
+      } else {
+        submitBtn.style.backgroundColor = '#d97706';
+        studioHeading.innerText = 'Publish Light Novel';
+      }
+
+      render();
+    }
+
+    function toggleMangaMode() {
+      const mode = document.getElementById('manga-action-choice').value;
+      const isExisting = mode === 'existing';
+      document.getElementById('existing-series-dropdown-group').classList.toggle('hidden', !isExisting);
+      document.getElementById('group-title').classList.toggle('hidden', isExisting);
+      document.getElementById('group-cover').classList.toggle('hidden', isExisting);
+      document.getElementById('group-desc').classList.toggle('hidden', isExisting);
+    }
+
+    function updateMangaDropdown() {
+      const select = document.getElementById('select-existing-manga');
+      select.innerHTML = '';
+      if (storage.manga.length === 0) {
+        select.innerHTML = '<option value="">No existing manga series found</option>';
+        document.getElementById('manga-action-choice').value = 'new';
+        toggleMangaMode();
+        return;
+      }
+      storage.manga.forEach((m, idx) => {
+        const opt = document.createElement('option');
+        opt.value = idx;
+        opt.innerText = m.title;
+        select.appendChild(opt);
+      });
+    }
+
+    function toggleMode() {
+      isCreatorMode = !isCreatorMode;
+      document.getElementById('view-watcher').classList.toggle('hidden', isCreatorMode);
+      document.getElementById('view-creator').classList.toggle('hidden', !isCreatorMode);
+      document.getElementById('btn-mode-toggle').innerText = isCreatorMode ? 'Switch to Watcher Hub' : 'Switch to Creator Studio';
+      if (isCreatorMode && activeCategory === 'manga') updateMangaDropdown();
+      if (!isCreatorMode) render();
+    }
+
+    function handleUpload(e) {
+      e.preventDefault();
+
+      if (activeCategory === 'animations') {
+        const title = document.getElementById('input-title').value.trim();
+        const desc = document.getElementById('input-desc').value.trim();
+        const cover = document.getElementById('input-cover').files[0];
+        const video = document.getElementById('input-video').files[0];
+
+        if (!title || !cover || !video) return alert('ကျေးဇူးပြု၍ Title၊ Cover ပုံ နှင့် Video ဖိုင် ထည့်ပေးပါ။');
+
+        storage.animations.unshift({
+          id: Date.now(),
+          title,
+          desc,
+          cover: URL.createObjectURL(cover),
+          src: URL.createObjectURL(video)
+        });
+      } 
+      else if (activeCategory === 'manga') {
+        const mangaMode = document.getElementById('manga-action-choice').value;
+        const mangaFiles = document.getElementById('input-manga').files;
+        const chapNum = parseInt(document.getElementById('input-chapter-num').value) || 1;
+
+        if (!mangaFiles || mangaFiles.length === 0) return alert('ကျေးဇူးပြု၍ အပိုင်းအတွက် ပုံများ ရွေးပေးပါ။');
+        const pageUrls = Array.from(mangaFiles).map(f => URL.createObjectURL(f));
+
+        if (mangaMode === 'new') {
+          const title = document.getElementById('input-title').value.trim();
+          const desc = document.getElementById('input-desc').value.trim();
+          const cover = document.getElementById('input-cover').files[0];
+          if (!title || !cover) return alert('Manga အသစ်အတွက် Title နှင့် Cover ပုံ လိုအပ်ပါသည်။');
+
+          storage.manga.unshift({
+            id: Date.now(),
+            title,
+            desc,
+            cover: URL.createObjectURL(cover),
+            chapters: [
+              { chapterNum: chapNum, pages: pageUrls }
+            ]
+          });
+        } else {
+          const selectedIdx = document.getElementById('select-existing-manga').value;
+          if (selectedIdx === "") return alert('Manga ရွေးချယ်မှု မမှန်ကန်ပါ။');
+          const targetManga = storage.manga[selectedIdx];
+          
+          targetManga.chapters.push({ chapterNum: chapNum, pages: pageUrls });
+          // အပိုင်းနံပါတ်အလိုက် အစဉ်လိုက် ပြန်စီခြင်း (Chapter 1, 2, 3...)
+          targetManga.chapters.sort((a, b) => a.chapterNum - b.chapterNum);
+        }
+      }
+      else if (activeCategory === 'novels') {
+        const title = document.getElementById('input-title').value.trim();
+        const desc = document.getElementById('input-desc').value.trim();
+        const cover = document.getElementById('input-cover').files[0];
+        const story = document.getElementById('input-story').value.trim();
+
+        if (!title || !cover || !story) return alert('Novel အတွက် Title၊ Cover နှင့် စာသားများ ဖြည့်ပေးပါ။');
+
+        storage.novels.unshift({
+          id: Date.now(),
+          title,
+          desc,
+          cover: URL.createObjectURL(cover),
+          content: story
+        });
+      }
+
+      document.getElementById('upload-form').reset();
+      alert('Upload အောင်မြင်ပါသည်။ Watcher Hub တွင် ချက်ချင်း ကြည့်ရှုနိုင်ပါသည်။');
+      toggleMode();
+    }
+
+    function render() {
+      const items = storage[activeCategory];
+      const grid = document.getElementById('media-grid');
+      const titleElem = document.getElementById('section-title');
+      const countElem = document.getElementById('section-count');
+
+      titleElem.innerText = activeCategory === 'animations' ? 'Animations' : activeCategory === 'manga' ? 'Manga & Webtoons' : 'Light Novels';
+      countElem.innerText = `${items.length} series`;
+
+      if (items.length === 0) {
+        grid.className = 'grid';
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem; border: 1px dashed #27272a; border-radius: 1rem;">
+            <p style="color: #71717a; font-size: 0.875rem;">မရှိသေးပါ။</p>
+            <button onclick="toggleMode()" style="margin-top: 0.5rem; background: none; border: none; color: #ef4444; font-size: 0.8rem; cursor: pointer; text-decoration: underline;">
+              Creator Studio သို့သွား၍ တင်ပါ
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      grid.className = 'grid ' + (activeCategory === 'animations' ? 'grid-anim' : 'grid-cover');
+      grid.innerHTML = items.map((item, index) => {
+        const isVideo = activeCategory === 'animations';
+        const badge = isVideo ? 'Watch' : activeCategory === 'manga' ? `${item.chapters.length} Ch` : 'Book';
+        return `
+          <div class="media-card" onclick="viewItem(${index})">
+            <img src="${item.cover}" class="${isVideo ? 'aspect-video' : 'aspect-cover'}" alt="${escapeText(item.title)}" />
+            <div class="card-meta">
+              <div class="card-title">${escapeText(item.title)}</div>
+              <div class="card-desc">${escapeText(item.desc || '')}</div>
+              <div style="margin-top:0.5rem; font-size:0.7rem; color:#ef4444; font-weight:700;">${badge}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function viewItem(index) {
+      const item = storage[activeCategory][index];
+      const detailSection = document.getElementById('detail-section');
+      const detailDisplay = document.getElementById('detail-display');
+
+      document.getElementById('grid-section').classList.add('hidden');
+      detailSection.classList.remove('hidden');
+
+      if (activeCategory === 'animations') {
+        detailDisplay.innerHTML = `
+          <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">${escapeText(item.title)}</h2>
+          ${item.desc ? `<p style="color: #a1a1aa; font-size: 0.875rem; margin-bottom: 1rem;">${escapeText(item.desc)}</p>` : ''}
+          <video controls autoplay class="aspect-video" style="border-radius:0.75rem; border:1px solid #27272a;" src="${item.src}"></video>
+        `;
+      } 
+      else if (activeCategory === 'manga') {
+        selectedMangaForView = item;
+        renderChapterList(item);
+      } 
+      else if (activeCategory === 'novels') {
+        detailDisplay.innerHTML = `
+          <div style="max-width:750px; margin:0 auto; background:#18181b; border:1px solid #27272a; padding:2rem; border-radius:1rem;">
+            <h1 style="color:#d97706; text-align:center; margin-bottom:1rem;">${escapeText(item.title)}</h1>
+            <div style="font-family:Georgia, serif; line-height:1.8; white-space:pre-wrap;">${escapeText(item.content)}</div>
+          </div>
+        `;
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Manga Chapter List Display
+    function renderChapterList(manga) {
+      const detailDisplay = document.getElementById('detail-display');
+      let chaptersHtml = manga.chapters.map((chap, cIdx) => `
+        <div class="chapter-item" onclick="openChapter(${cIdx})">
+          <span style="font-weight:700;">အပိုင်း (${chap.chapterNum})</span>
+          <span style="font-size:0.8rem; color:#a1a1aa;">${chap.pages.length} Pages  →</span>
+        </div>
+      `).join('');
+
+      detailDisplay.innerHTML = `
+        <div style="max-width:700px; margin:0 auto;">
+          <div style="display:flex; gap:1.5rem; margin-bottom:2rem; background:#18181b; padding:1.25rem; border-radius:0.75rem; border:1px solid #27272a;">
+            <img src="${manga.cover}" style="width:120px; aspect-ratio:3/4; object-fit:cover; border-radius:0.5rem;" />
+            <div>
+              <h2 style="font-size:1.5rem; font-weight:800; margin-bottom:0.5rem;">${escapeText(manga.title)}</h2>
+              <p style="color:#a1a1aa; font-size:0.85rem;">${escapeText(manga.desc || 'No description.')}</p>
+              <p style="color:#4f46e5; font-size:0.8rem; margin-top:0.75rem; font-weight:700;">Total: ${manga.chapters.length} Chapters</p>
+            </div>
+          </div>
+          <h3 style="font-size:1.1rem; margin-bottom:1rem; color:#e4e4e7;">Chapters List (အပိုင်းများ ရွေးဖတ်ရန်)</h3>
+          <div>${chaptersHtml}</div>
+        </div>
+      `;
+    }
+
+    function openChapter(cIdx) {
+      const chap = selectedMangaForView.chapters[cIdx];
+      const detailDisplay = document.getElementById('detail-display');
+      detailDisplay.innerHTML = `
+        <button onclick="renderChapterList(selectedMangaForView)" class="btn-back">← Back to Chapters List</button>
+        <h2 style="text-align:center; margin-bottom:1rem; font-size:1.25rem;">${escapeText(selectedMangaForView.title)} - အပိုင်း (${chap.chapterNum})</h2>
+        <div class="strip-wrapper">
+          ${chap.pages.map(src => `<img src="${src}" />`).join('')}
+        </div>
+      `;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function closeViewer() {
+      document.getElementById('detail-section').classList.add('hidden');
+      document.getElementById('grid-section').classList.remove('hidden');
+      document.getElementById('detail-display').innerHTML = '';
+      selectedMangaForView = null;
+    }
+
+    function escapeText(str) {
+      if (!str) return '';
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+  </script>
+</body>
+</html>
